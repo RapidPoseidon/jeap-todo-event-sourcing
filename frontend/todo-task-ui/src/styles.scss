@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+
+// Oblique ships the Confederation logo as the default brand; this sample application is not a federal service.
+.ob-master-layout-logo img {
+	content: url('/assets/images/logo.svg');
+}

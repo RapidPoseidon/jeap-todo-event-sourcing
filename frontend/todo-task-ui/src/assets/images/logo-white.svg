@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="156" height="38" viewBox="0 0 156 38" role="img" aria-label="todo">
+  <rect x="0" y="3" width="32" height="32" rx="8" fill="#ffffff"/>
+  <path d="M9 19.5l5 5 9-11" fill="none" stroke="#1b3a5c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="42" y="26" font-family="Helvetica, Arial, sans-serif" font-size="21" font-weight="700" fill="#ffffff">todo</text>
+  <text x="103" y="26" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#d8dde1">demo</text>
+</svg>
