@@ -103,3 +103,6 @@ Two things are worth pointing out:
 - `event-sourcing.subscriptions` switches between `postgres-channel` (LISTEN/NOTIFY, the default) and
   `polling` for environments where a long-lived listening connection is not available.
 - Snapshots are configured per aggregate type under `event-sourcing.snapshotting`.
+- `jeap.swagger.status` is `DISABLED` by default in the starter — a deny-all filter chain in front of
+  the Swagger paths. This sample sets it to `OPEN`; a real deployment would leave it closed or use
+  `SECURED`.

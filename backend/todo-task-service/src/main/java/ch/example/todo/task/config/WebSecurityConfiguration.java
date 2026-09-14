@@ -49,16 +49,6 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE + 21)
-    public SecurityFilterChain apiDocumentationSecurityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .securityMatcher("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**")
-                .authorizeHttpRequests(requests -> requests.anyRequest().permitAll())
-                .csrf(AbstractHttpConfigurer::disable)
-                .build();
-    }
-
-    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(properties.getCors().getAllowedOrigins());

@@ -45,6 +45,9 @@ jeap:
             enabled: true
           authentication-failure:
             enabled: true
+  # The starter denies the Swagger UI by default; this sample opens it, a deployment should not.
+  swagger:
+    status: ${SWAGGER_STATUS:OPEN}
   monitor:
     prometheus:
       user: ${PROMETHEUS_USER:prometheus}

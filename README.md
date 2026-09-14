@@ -35,7 +35,7 @@ docker compose up --build
 | Service | URL | Notes |
 | --- | --- | --- |
 | UI | <http://localhost:4200> | log in as `anna` (read + write) or `ben` (read only) |
-| API | <http://localhost:8080/swagger-ui.html> | OpenAPI UI |
+| API | <http://localhost:8080/swagger-ui.html> | OpenAPI UI — the jEAP starter denies it by default, `SWAGGER_STATUS` opens it |
 | OIDC mock | <http://localhost:8180/jeap-oauth-mock-server> | issues jEAP-shaped tokens |
 | PostgreSQL | `localhost:5432` | user/password/database `todo`, schema `data` |
 
