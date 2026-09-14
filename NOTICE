@@ -1,0 +1,13 @@
+Todo — an event-sourced task manager on jEAP building blocks
+Copyright 2026 the repository authors
+
+This product includes software developed at
+the Federal Office of Information Technology, Systems and Telecommunication (FOITT/BIT)
+of the Swiss Confederation (https://github.com/jeap-admin-ch), licensed under the Apache License 2.0.
+
+The PostgreSQL event-store design in todo-eventsourcing-core — the table layout, the optimistic
+concurrency control, the transaction-id based outbox and the LISTEN/NOTIFY subscriptions — is derived
+from postgresql-event-sourcing by Eugene Khyst (https://github.com/eugene-khyst/postgresql-event-sourcing),
+licensed under the Apache License 2.0.
+
+Oblique (https://oblique.bit.admin.ch/) is licensed under the MIT License.

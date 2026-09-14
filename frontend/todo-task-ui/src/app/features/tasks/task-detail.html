@@ -1,0 +1,87 @@
+<div class="detail-page">
+	<a class="detail-page__back" routerLink="/tasks">← All tasks</a>
+
+	@if (error(); as message) {
+		<div class="ob-alert ob-alert-error" role="alert">{{ message }}</div>
+	}
+
+	@if (task(); as current) {
+		<h1>{{ current.title }}</h1>
+		<p class="detail-page__meta">
+			<span>status {{ current.status }}</span>
+			<span>version {{ current.version }}</span>
+			<span>owner {{ current.owner }}</span>
+			<span>created {{ current.createdDate | date: 'dd.MM.yyyy HH:mm' }}</span>
+		</p>
+
+		<div class="detail-page__columns">
+			<mat-card appearance="outlined">
+				<mat-card-header><mat-card-title>Change details</mat-card-title></mat-card-header>
+				<mat-card-content>
+					<form [formGroup]="form" (ngSubmit)="save()">
+						<mat-form-field appearance="outline">
+							<mat-label>Title</mat-label>
+							<input matInput formControlName="title" maxlength="200" />
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>Description</mat-label>
+							<textarea matInput formControlName="description" rows="3"></textarea>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>Priority</mat-label>
+							<mat-select formControlName="priority">
+								@for (priority of priorities; track priority) {
+									<mat-option [value]="priority">{{ priority }}</mat-option>
+								}
+							</mat-select>
+						</mat-form-field>
+						<mat-form-field appearance="outline">
+							<mat-label>Due date</mat-label>
+							<input matInput type="date" formControlName="dueDate" />
+						</mat-form-field>
+						<button mat-flat-button color="primary" type="submit" [disabled]="form.invalid || current.status !== 'OPEN'">
+							Save — appends an event
+						</button>
+					</form>
+				</mat-card-content>
+			</mat-card>
+
+			<mat-card appearance="outlined" class="time-travel">
+				<mat-card-header><mat-card-title>Replay</mat-card-title></mat-card-header>
+				<mat-card-content>
+					<p class="time-travel__hint">Rebuild the task from its events up to any version.</p>
+					<mat-slider [min]="1" [max]="current.version" step="1" discrete showTickMarks>
+						<input matSliderThumb [value]="selectedVersion()" (valueChange)="replay($event)" />
+					</mat-slider>
+					@if (replayed(); as snapshot) {
+						<dl class="time-travel__state">
+							<dt>version</dt><dd>{{ snapshot.version }}</dd>
+							<dt>title</dt><dd>{{ snapshot.title }}</dd>
+							<dt>status</dt><dd>{{ snapshot.status }}</dd>
+							<dt>priority</dt><dd>{{ snapshot.priority }}</dd>
+							<dt>due date</dt><dd>{{ snapshot.dueDate ? (snapshot.dueDate | date: 'dd.MM.yyyy') : '—' }}</dd>
+							<dt>description</dt><dd>{{ snapshot.description || '—' }}</dd>
+						</dl>
+					}
+				</mat-card-content>
+			</mat-card>
+		</div>
+
+		<h2>Event stream</h2>
+		<ol class="timeline">
+			@for (event of events(); track event.id) {
+				<li class="timeline__item" [class.timeline__item--selected]="event.version === selectedVersion()">
+					<div class="timeline__marker">v{{ event.version }}</div>
+					<div class="timeline__body">
+						<span class="timeline__type">{{ event.eventType }}</span>
+						<span class="timeline__date">{{ event.createdDate | date: 'dd.MM.yyyy HH:mm:ss' }}</span>
+						@if (event.initiatedBy) {
+							<span class="timeline__actor">by {{ event.initiatedBy }}</span>
+						}
+						<pre class="timeline__payload">{{ payloadOf(event) | json }}</pre>
+					</div>
+				</li>
+			}
+		</ol>
+	}
+</div>

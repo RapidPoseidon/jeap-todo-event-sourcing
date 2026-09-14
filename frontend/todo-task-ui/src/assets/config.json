@@ -1,0 +1,5 @@
+{
+  "apiUrl": "http://localhost:8080",
+  "issuer": "http://localhost:8180/jeap-oauth-mock-server",
+  "clientId": "todo-task-ui"
+}

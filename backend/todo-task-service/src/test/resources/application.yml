@@ -1,0 +1,35 @@
+# Replaces the main application.yml during tests; the datasource comes from the Testcontainers registry.
+spring:
+  application:
+    name: todo-task-service
+  flyway:
+    default-schema: data
+  jpa:
+    open-in-view: false
+
+database-migration:
+  startup-migrate-mode-enabled: true
+
+jeap:
+  security:
+    oauth2:
+      resourceserver:
+        system-name: todo
+        resource-id: todo-task-service
+        authorization-server:
+          issuer: http://localhost/auth-mock
+
+event-sourcing:
+  subscriptions: postgres-channel
+  snapshotting:
+    TASK:
+      enabled: true
+      nth-event: 3
+
+todo:
+  cors:
+    allowed-origins: http://localhost:4200
+
+logging:
+  level:
+    ch.example: INFO

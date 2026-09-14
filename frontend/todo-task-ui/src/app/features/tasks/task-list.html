@@ -1,0 +1,119 @@
+<div class="task-page">
+	<header class="task-page__header">
+		<div class="task-page__identity">
+			<span>signed in as <strong>{{ auth.userName() }}</strong></span>
+			<span class="task-page__roles">{{ auth.roles().join(' · ') }}</span>
+			<button mat-stroked-button type="button" (click)="auth.logout()">Log out</button>
+		</div>
+		<h1>Tasks</h1>
+		<p class="task-page__lead">
+			Every change below is stored as an immutable event. The list is a read model; the statistics are maintained by an
+			asynchronous subscription on the event stream.
+		</p>
+	</header>
+
+	@if (error(); as message) {
+		<div class="ob-alert ob-alert-error" role="alert">{{ message }}</div>
+	}
+
+	<section class="task-page__statistics">
+		<mat-card appearance="outlined">
+			<mat-card-content>
+				<span class="statistic__value">{{ openCount() }}</span>
+				<span class="statistic__label">open now</span>
+			</mat-card-content>
+		</mat-card>
+		@if (statistics(); as stats) {
+			<mat-card appearance="outlined">
+				<mat-card-content>
+					<span class="statistic__value">{{ stats.createdCount }}</span>
+					<span class="statistic__label">created (all time)</span>
+				</mat-card-content>
+			</mat-card>
+			<mat-card appearance="outlined">
+				<mat-card-content>
+					<span class="statistic__value">{{ stats.completedCount }}</span>
+					<span class="statistic__label">completed</span>
+				</mat-card-content>
+			</mat-card>
+			<mat-card appearance="outlined">
+				<mat-card-content>
+					<span class="statistic__value">{{ stats.reopenedCount }}</span>
+					<span class="statistic__label">reopened</span>
+				</mat-card-content>
+			</mat-card>
+		}
+	</section>
+
+	<mat-card appearance="outlined" class="task-form">
+		<mat-card-header><mat-card-title>New task</mat-card-title></mat-card-header>
+		<mat-card-content>
+			<form [formGroup]="form" (ngSubmit)="createTask()">
+				<mat-form-field appearance="outline" class="task-form__title">
+					<mat-label>Title</mat-label>
+					<input matInput formControlName="title" maxlength="200" placeholder="What needs to be done?" />
+				</mat-form-field>
+				<mat-form-field appearance="outline" class="task-form__priority">
+					<mat-label>Priority</mat-label>
+					<mat-select formControlName="priority">
+						@for (priority of priorities; track priority) {
+							<mat-option [value]="priority">{{ priority }}</mat-option>
+						}
+					</mat-select>
+				</mat-form-field>
+				<mat-form-field appearance="outline" class="task-form__due">
+					<mat-label>Due date</mat-label>
+					<input matInput type="date" formControlName="dueDate" />
+				</mat-form-field>
+				<mat-form-field appearance="outline" class="task-form__description">
+					<mat-label>Description</mat-label>
+					<textarea matInput formControlName="description" rows="2"></textarea>
+				</mat-form-field>
+				<button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">Create task</button>
+			</form>
+		</mat-card-content>
+	</mat-card>
+
+	<mat-button-toggle-group class="task-page__filter" [value]="filter()" (change)="changeFilter($any($event.value))">
+		<mat-button-toggle value="ALL">All</mat-button-toggle>
+		<mat-button-toggle value="OPEN">Open</mat-button-toggle>
+		<mat-button-toggle value="COMPLETED">Completed</mat-button-toggle>
+	</mat-button-toggle-group>
+
+	<section class="task-list">
+		@for (task of tasks(); track task.id) {
+			<mat-card appearance="outlined" class="task-card" [class.task-card--completed]="task.status === 'COMPLETED'">
+				<mat-card-content>
+					<div class="task-card__main">
+						<span class="task-card__priority" [attr.data-priority]="task.priority">{{ task.priority }}</span>
+						<a class="task-card__title" [routerLink]="['/tasks', task.id]">{{ task.title }}</a>
+						<span class="task-card__version">v{{ task.version }}</span>
+					</div>
+					@if (task.description) {
+						<p class="task-card__description">{{ task.description }}</p>
+					}
+					<div class="task-card__meta">
+						@if (task.dueDate) {
+							<span>due {{ task.dueDate | date: 'dd.MM.yyyy' }}</span>
+						}
+						<span>changed {{ task.lastModifiedDate | date: 'dd.MM.yyyy HH:mm' }}</span>
+						@if (task.completionCount > 0) {
+							<span>completed {{ task.completionCount }}×</span>
+						}
+					</div>
+				</mat-card-content>
+				<mat-card-actions align="end">
+					@if (task.status === 'OPEN') {
+						<button mat-stroked-button type="button" (click)="changeStatus(task, 'COMPLETED')">Complete</button>
+					} @else {
+						<button mat-stroked-button type="button" (click)="changeStatus(task, 'OPEN')">Reopen</button>
+					}
+					<a mat-button [routerLink]="['/tasks', task.id]">History</a>
+					<button mat-button type="button" (click)="deleteTask(task)">Delete</button>
+				</mat-card-actions>
+			</mat-card>
+		} @empty {
+			<p class="task-list__empty">No tasks yet — create one above.</p>
+		}
+	</section>
+</div>
