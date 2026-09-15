@@ -1,0 +1,138 @@
+.task-page {
+	max-width: 68rem;
+	margin: 0 auto;
+	padding: 1.5rem 1rem 3rem;
+}
+
+.task-page__identity {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	justify-content: flex-end;
+	font-size: 0.85rem;
+}
+
+.task-page__roles {
+	font-family: monospace;
+	color: #5a6570;
+}
+
+.task-page__lead {
+	max-width: 48rem;
+	color: #5a6570;
+}
+
+.task-page__statistics {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-bottom: 1.5rem;
+
+	mat-card {
+		min-width: 9rem;
+		flex: 1 1 9rem;
+	}
+}
+
+.statistic__value {
+	display: block;
+	font-size: 1.75rem;
+	font-weight: 700;
+	line-height: 1.1;
+}
+
+.statistic__label {
+	color: #5a6570;
+	font-size: 0.85rem;
+}
+
+.task-form {
+	margin-bottom: 1.5rem;
+
+	form {
+		display: grid;
+		grid-template-columns: 2fr 1fr 1fr;
+		gap: 0.75rem 1rem;
+		align-items: start;
+	}
+}
+
+.task-form__description {
+	grid-column: 1 / -1;
+}
+
+.task-page__filter {
+	margin-bottom: 1rem;
+}
+
+.task-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.task-card__main {
+	display: flex;
+	align-items: baseline;
+	gap: 0.75rem;
+}
+
+.task-card__title {
+	font-size: 1.1rem;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.task-card--completed .task-card__title {
+	text-decoration: line-through;
+	opacity: 0.7;
+}
+
+.task-card__priority {
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	padding: 0.1rem 0.45rem;
+	border-radius: 0.75rem;
+	background: #e4e8eb;
+
+	&[data-priority='HIGH'] {
+		background: #f7d4d4;
+		color: #8b1a1a;
+	}
+
+	&[data-priority='LOW'] {
+		background: #e2eee2;
+		color: #245c24;
+	}
+}
+
+.task-card__version {
+	margin-left: auto;
+	font-family: monospace;
+	color: #5a6570;
+}
+
+.task-card__description {
+	margin: 0.4rem 0 0;
+	color: #3c4650;
+}
+
+.task-card__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin-top: 0.5rem;
+	font-size: 0.8rem;
+	color: #5a6570;
+}
+
+.task-list__empty {
+	color: #5a6570;
+}
+
+@media (max-width: 48rem) {
+	.task-form form {
+		grid-template-columns: 1fr;
+	}
+}

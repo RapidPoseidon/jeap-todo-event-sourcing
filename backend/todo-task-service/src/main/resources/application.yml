@@ -1,0 +1,68 @@
+spring:
+  application:
+    name: todo-task-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/todo?currentSchema=data}
+    username: ${DB_USERNAME:todo}
+    password: ${DB_PASSWORD:todo}
+  flyway:
+    locations: classpath:db/migration
+    default-schema: data
+  jpa:
+    open-in-view: false
+  threads:
+    virtual:
+      enabled: true
+
+# On Kubernetes the starter expects a migration init container; this service migrates on startup instead.
+database-migration:
+  startup-migrate-mode-enabled: ${DB_MIGRATION_ON_STARTUP:true}
+
+server:
+  port: ${SERVER_PORT:8080}
+  forward-headers-strategy: framework
+
+event-sourcing:
+  # postgres-channel keeps subscriptions on LISTEN/NOTIFY; polling is the fallback where LISTEN is unavailable.
+  subscriptions: ${EVENT_SOURCING_SUBSCRIPTIONS:postgres-channel}
+  snapshotting:
+    TASK:
+      enabled: true
+      nth-event: 10
+
+jeap:
+  security:
+    oauth2:
+      resourceserver:
+        # Setting system-name activates semantic roles: todo_@task_#read, todo_@task_#write
+        system-name: todo
+        resource-id: ${OAUTH_RESOURCE_ID:todo-task-service}
+        authorization-server:
+          issuer: ${OAUTH_ISSUER:http://localhost:8180/jeap-oauth-mock-server}
+          jwk-set-uri: ${OAUTH_JWK_SET_URI:${OAUTH_ISSUER:http://localhost:8180/jeap-oauth-mock-server}/protocol/openid-connect/certs}
+        log:
+          access-denied:
+            enabled: true
+          authentication-failure:
+            enabled: true
+  # The starter denies the Swagger UI by default; this sample opens it, a deployment should not.
+  swagger:
+    status: ${SWAGGER_STATUS:OPEN}
+  monitor:
+    prometheus:
+      user: ${PROMETHEUS_USER:prometheus}
+      password: ${PROMETHEUS_PASSWORD:{noop}prometheus}
+
+todo:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    ch.example: INFO

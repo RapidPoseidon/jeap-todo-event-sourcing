@@ -1,0 +1,20 @@
+-- Wakes the subscription processor on commit so read models follow within milliseconds instead of a poll interval.
+
+CREATE OR REPLACE FUNCTION CHANNEL_EVENT_NOTIFY_FCT()
+    RETURNS TRIGGER AS
+$BODY$
+DECLARE
+    aggregate_type TEXT;
+BEGIN
+    SELECT a.AGGREGATE_TYPE INTO aggregate_type FROM ES_AGGREGATE a WHERE a.ID = NEW.AGGREGATE_ID;
+    PERFORM pg_notify('channel_event_notify', aggregate_type);
+    RETURN NEW;
+END;
+$BODY$
+    LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE TRIGGER CHANNEL_EVENT_NOTIFY_TRG
+    AFTER INSERT
+    ON ES_EVENT
+    FOR EACH ROW
+EXECUTE PROCEDURE CHANNEL_EVENT_NOTIFY_FCT();

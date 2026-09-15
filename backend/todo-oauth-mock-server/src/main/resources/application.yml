@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: jeap-oauth-mock-server
+  main:
+    banner-mode: off
+
+server:
+  port: ${SERVER_PORT:8180}
+  servlet:
+    context-path: /${spring.application.name}
+  forward-headers-strategy: framework
+
+# The issuer of every token; it must be reachable under this URL from browser and services alike.
+mockserver:
+  base-url: ${AUTH_BASE_URL:http://localhost:8180/jeap-oauth-mock-server}
+
+oauth-mock-data:
+  clients:
+    - client-id: "todo-task-ui"
+      registered-redirect-uri:
+        - "${UI_BASE_URL:http://localhost:3001}"
+        - "${UI_BASE_URL:http://localhost:3001}/"
+        - "${UI_BASE_URL:http://localhost:3001}/index.html"
+        - "http://localhost:3001"
+        - "http://localhost:3001/"
+        - "http://localhost:4200"
+        - "http://localhost:4200/"
+      context: "USER"
+      audience: [ "todo-task-service" ]
+      scope: [ "openid", "profile" ]
+      userroles: [ "todo_@task_#read", "todo_@task_#write" ]
+
+    # Technical client for batch jobs and for exercising the API without a browser
+    - client-id: "todo-task-batch"
+      client-secret: "{noop}secret"
+      context: "SYS"
+      audience: [ "todo-task-service" ]
+      userroles: [ "todo_@task_#read", "todo_@task_#write" ]
+
+  users:
+    - id: "anna"
+      given-name: "Anna"
+      family-name: "Beispiel"
+      locale: "DE"
+      preferred-username: "anna"
+      ext-id: "1001"
+      login-level: "S2"
+      userroles: [ "todo_@task_#read", "todo_@task_#write" ]
+
+    - id: "ben"
+      given-name: "Ben"
+      family-name: "Muster"
+      locale: "DE"
+      preferred-username: "ben"
+      ext-id: "1002"
+      login-level: "S2"
+      userroles: [ "todo_@task_#read" ]
+
+logging:
+  level:
+    ch.admin.bit.jeap: INFO
